@@ -30,6 +30,12 @@ class Xophz_Compass_Glowitheflow_Public {
 	public function template_redirect() {
 		global $wp_query;
 
+		// Do not intercept WordPress admin or login routes.
+		$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+		if ( strpos( $request_uri, '/wp-admin' ) === 0 || strpos( $request_uri, '/wp-login.php' ) === 0 ) {
+			return;
+		}
+
 		$isRouteMatch          = isset( $wp_query->query_vars['xophz_compass_glowitheflow'] );
 		$isConfiguredPageMatch = $this->is_configured_page();
 
@@ -81,10 +87,11 @@ class Xophz_Compass_Glowitheflow_Public {
 	}
 
 	private function render_glowitheflow_shell( $app_base ) {
-		$is_dev    = $this->is_dev_mode();
-		$wp_host   = wp_parse_url( home_url(), PHP_URL_HOST );
-		$vite_port = '5177';
-		$vite_url  = '//' . $wp_host . ':' . $vite_port;
+		$is_dev          = $this->is_dev_mode();
+		$wp_host         = wp_parse_url( home_url(), PHP_URL_HOST );
+		$vite_port       = '5177';
+		$vite_url        = '//' . $wp_host . ':' . $vite_port;
+		$app_base_slash  = $app_base ? '/' . trim( $app_base, '/' ) . '/' : '/';
 
 		if ( $is_dev ) {
 			$internal_host = 'compass';
@@ -100,6 +107,10 @@ class Xophz_Compass_Glowitheflow_Public {
 				$dev_html = str_replace( 'src="/', 'src="' . $vite_url . '/', $dev_html );
 				$dev_html = str_replace( 'href="/', 'href="' . $vite_url . '/', $dev_html );
 				$dev_html = str_replace( 'import("/', 'import("' . $vite_url . '/', $dev_html );
+
+				// Dynamic Nuxt router base path configuration
+				$dev_html = str_replace( 'baseURL:"/"', 'baseURL:"' . esc_js( $app_base_slash ) . '"', $dev_html );
+				$dev_html = str_replace( 'baseURL: "/"', 'baseURL: "' . esc_js( $app_base_slash ) . '"', $dev_html );
 
 				// Inject WP API Settings and nonces
 				$nonce           = wp_create_nonce( 'wp_rest' );
@@ -121,6 +132,10 @@ class Xophz_Compass_Glowitheflow_Public {
 		if ( file_exists( $index_file ) ) {
 			$html     = file_get_contents( $index_file );
 			$dist_url = XOPHZ_COMPASS_GLOWITHEFLOW_URL . 'public/dist/';
+
+			// Dynamic Nuxt router base path configuration
+			$html = str_replace( 'baseURL:"/"', 'baseURL:"' . esc_js( $app_base_slash ) . '"', $html );
+			$html = str_replace( 'baseURL: "/"', 'baseURL: "' . esc_js( $app_base_slash ) . '"', $html );
 
 			// Rewrite assets paths
 			$html = str_replace( '"/_nuxt/', '"' . $dist_url . '_nuxt/', $html );
