@@ -74,7 +74,7 @@ class Xophz_Compass_Glowitheflow_Admin {
 						<th scope="row">Target WordPress Page</th>
 						<td>
 							<select name="xophz_compass_glowitheflow_load_page_id">
-								<option value="0">— Select Page —</option>
+								<option value="0">- Select Page -</option>
 								<?php foreach ( $pages as $page ) : ?>
 									<option value="<?php echo $page->ID; ?>" <?php selected( $load_page_id, $page->ID ); ?>>
 										<?php echo esc_html( $page->post_title ); ?> (ID: <?php echo $page->ID; ?>)
