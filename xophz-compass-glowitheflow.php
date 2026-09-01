@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Xophz Glowitheflow
  * Description:       Standalone WordPress backend and router for the Glowitheflow web app.
- * Version:           26.9.1-448
+ * Version:           26.9.1-1200
  * Author:            Hall of the Gods, Inc.
  * Category:          Command Deck
  * Group:             Ecosystem
@@ -13,7 +13,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'XOPHZ_COMPASS_GLOWITHEFLOW_VERSION', '26.9.1-448' );
+define( 'XOPHZ_COMPASS_GLOWITHEFLOW_VERSION', '26.9.1-1200' );
 define( 'XOPHZ_COMPASS_GLOWITHEFLOW_PATH', plugin_dir_path( __FILE__ ) );
 define( 'XOPHZ_COMPASS_GLOWITHEFLOW_URL', plugin_dir_url( __FILE__ ) );
 
