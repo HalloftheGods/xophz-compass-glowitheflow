@@ -94,12 +94,19 @@ class Xophz_Compass_Glowitheflow_Public {
 		$app_base_slash  = $app_base ? '/' . trim( $app_base, '/' ) . '/' : '/';
 
 		if ( $is_dev ) {
-			$internal_host = 'compass';
-			$dev_html      = @file_get_contents( "http://{$internal_host}:{$vite_port}/" );
+			$active_host = class_exists( 'Xophz_Compass_Dev_Proxy' )
+				? Xophz_Compass_Dev_Proxy::resolve_host( (int) $vite_port )
+				: null;
+			$dev_html = false;
 
-			// Fallback to localhost if internal host is unreachable directly
-			if ( ! $dev_html ) {
-				$dev_html = @file_get_contents( "http://127.0.0.1:{$vite_port}/" );
+			if ( $active_host ) {
+				$response = wp_remote_get( "http://{$active_host}:{$vite_port}/", array(
+					'timeout'     => 2,
+					'redirection' => 2,
+				) );
+				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+					$dev_html = wp_remote_retrieve_body( $response );
+				}
 			}
 
 			if ( $dev_html ) {
