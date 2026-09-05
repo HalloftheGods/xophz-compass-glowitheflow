@@ -83,7 +83,17 @@ class Xophz_Compass_Glowitheflow_Public {
 	}
 
 	private function is_dev_mode() {
-		return ( defined( 'WP_ENV' ) && WP_ENV === 'development' ) || ( defined( 'WP_DEBUG' ) && WP_DEBUG );
+		if ( class_exists( 'Xophz_Compass_Dev_Proxy' ) ) {
+			return Xophz_Compass_Dev_Proxy::is_dev_mode();
+		}
+		if ( defined( 'WP_ENV' ) && in_array( strtolower( (string) WP_ENV ), array( 'production', 'staging' ), true ) ) {
+			return false;
+		}
+		$env_wp = getenv( 'WP_ENV' );
+		if ( false !== $env_wp && in_array( strtolower( trim( (string) $env_wp ) ), array( 'production', 'staging' ), true ) ) {
+			return false;
+		}
+		return ( defined( 'WP_ENV' ) && 'development' === WP_ENV ) || ( defined( 'WP_DEBUG' ) && WP_DEBUG );
 	}
 
 	private function render_glowitheflow_shell( $app_base ) {
