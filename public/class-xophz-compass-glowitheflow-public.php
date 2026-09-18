@@ -17,6 +17,10 @@ class Xophz_Compass_Glowitheflow_Public {
 		// Always register default route /glowitheflow
 		add_rewrite_rule( '^glowitheflow(/.*)?$', 'index.php?xophz_compass_glowitheflow=1', 'top' );
 
+		// Register dedicated standalone login routes
+		add_rewrite_rule( '^glow-login/?$', 'index.php?glow_login=1', 'top' );
+		add_rewrite_rule( '^login/?$', 'index.php?glow_login=1', 'top' );
+
 		if ( $load_mode === 'custom_slug' && ! empty( $custom_slug ) && $custom_slug !== 'glowitheflow' ) {
 			add_rewrite_rule( '^' . preg_quote( $custom_slug, '/' ) . '(/.*)?$', 'index.php?xophz_compass_glowitheflow=1', 'top' );
 		}
@@ -24,14 +28,38 @@ class Xophz_Compass_Glowitheflow_Public {
 
 	public function register_query_vars( $vars ) {
 		$vars[] = 'xophz_compass_glowitheflow';
+		$vars[] = 'glow_login';
 		return $vars;
 	}
 
 	public function template_redirect() {
 		global $wp_query;
 
-		// Do not intercept WordPress admin or login routes.
 		$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+		$path_only   = trim( (string) parse_url( $request_uri, PHP_URL_PATH ), '/' );
+
+		// Intercept dedicated login routes (/glow-login and /login)
+		$is_glow_login = isset( $wp_query->query_vars['glow_login'] ) ||
+		                 ( $path_only === 'glow-login' ) ||
+		                 ( class_exists( 'Glow_Auth_Handler' ) && Glow_Auth_Handler::is_glow_domain() && $path_only === 'login' );
+
+		if ( $is_glow_login ) {
+			if ( is_user_logged_in() ) {
+				$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? esc_url_raw( wp_unslash( $_REQUEST['redirect_to'] ) ) : admin_url();
+				wp_safe_redirect( $redirect_to );
+				exit;
+			}
+
+			$error_message = null;
+			if ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) {
+				$error_message = Glow_Auth_Handler::process_login();
+			}
+
+			Glow_Auth_Handler::render_login_page( $error_message );
+			exit;
+		}
+
+		// Do not intercept WordPress admin or login routes.
 		if ( strpos( $request_uri, '/wp-admin' ) === 0 || strpos( $request_uri, '/wp-login.php' ) === 0 ) {
 			return;
 		}

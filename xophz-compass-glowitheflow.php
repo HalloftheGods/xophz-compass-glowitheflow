@@ -41,6 +41,9 @@ function run_xophz_compass_glowitheflow() {
 	add_action( 'update_option_xophz_compass_glowitheflow_custom_slug', array( $admin, 'flush_rewrites_on_save' ), 10, 2 );
 	add_action( 'update_option_xophz_compass_glowitheflow_load_page_id', array( $admin, 'flush_rewrites_on_save' ), 10, 2 );
 
+	$auth_handler = new Glow_Auth_Handler();
+	$auth_handler->init();
+
 	$public = new Xophz_Compass_Glowitheflow_Public( 'xophz-compass-glowitheflow', XOPHZ_COMPASS_GLOWITHEFLOW_VERSION );
 	add_action( 'init', array( $public, 'register_endpoints' ) );
 	add_action( 'init', function() {
