@@ -1,6 +1,7 @@
 <?php
 /**
  * Plugin Name:       Xophz Glowitheflow
+ * Plugin URI:        https://glowitheflow.com
  * Description:       Standalone WordPress backend and router for the Glowitheflow web app.
  * Version:           26.9.17
  * Author:            Hall of the Gods, Inc.
