@@ -4,7 +4,8 @@
  * Plugin URI:        https://glowitheflow.com
  * Description:       Standalone WordPress backend and router for the Glowitheflow web app.
  * Version:           26.9.19
- * Author:            Hall of the Gods, Inc.
+ * Author:            My Compass Consulting
+ * Author URI:        https://mycompassconsulting.com/
  * Category:          Command Deck
  * Group:             Ecosystem
  * Text Domain:       xophz-compass-glowitheflow
