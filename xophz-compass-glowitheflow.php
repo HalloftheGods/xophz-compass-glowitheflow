@@ -3,7 +3,7 @@
  * Plugin Name:       Xophz Glowitheflow
  * Plugin URI:        https://glowitheflow.com
  * Description:       Standalone WordPress backend and router for the Glowitheflow web app.
- * Version:           26.11.18-275
+ * Version:           26.11.18
  * Author:            My Compass Consulting
  * Author URI:        https://mycompassconsulting.com/
  * Category:          Command Deck
@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'XOPHZ_COMPASS_GLOWITHEFLOW_VERSION', '26.11.18-275' );
+define( 'XOPHZ_COMPASS_GLOWITHEFLOW_VERSION', '26.11.18' );
 define( 'XOPHZ_COMPASS_GLOWITHEFLOW_PATH', plugin_dir_path( __FILE__ ) );
 define( 'XOPHZ_COMPASS_GLOWITHEFLOW_URL', plugin_dir_url( __FILE__ ) );
 
